@@ -12,7 +12,9 @@ router.get('/', (req, res) => {
       'post_url',
       'title',
       'created_at',
+      'post-content'
     ],
+    order: [['created at', 'DESC']],
     include: [
       {
         model: Comment,
@@ -78,7 +80,7 @@ router.post('/', withAuth, (req, res) => {
   // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
   Post.create({
     title: req.body.title,
-    post_url: req.body.post_url,
+    post_url: req.body.post_content,
     user_id: req.session.user_id
   })
     .then(dbPostData => res.json(dbPostData))
@@ -91,7 +93,8 @@ router.post('/', withAuth, (req, res) => {
 router.put('/:id', withAuth, (req, res) => {
   Post.update(
     {
-      title: req.body.title
+      title: req.body.title,
+      post_content: req.body.post_content
     },
     {
       where: {
@@ -113,7 +116,7 @@ router.put('/:id', withAuth, (req, res) => {
 });
 
 router.delete('/:id', withAuth, (req, res) => {
-  console.log('id', req.params.id);
+  // console.log('id', req.params.id);
   Post.destroy({
     where: {
       id: req.params.id
